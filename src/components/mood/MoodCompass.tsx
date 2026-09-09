@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { MoodType } from '../../types';
 import { MOODS } from '../../lib/constants';
 import { Button } from '../common/Button';
 import { Scene, FloatingOrb, ParticleField } from '../3d';
+import { detectMood, type MoodScore } from '../../utils/moodDetection';
 
 interface MoodCompassProps {
   onSelectMood: (mood: MoodType) => void;
@@ -22,9 +23,24 @@ const moodPositions: Record<MoodType, [number, number, number]> = {
 export function MoodCompass({ onSelectMood }: MoodCompassProps) {
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
   const [hoveredMood, setHoveredMood] = useState<MoodType | null>(null);
+  const [userInput, setUserInput] = useState('');
+  const [suggestions, setSuggestions] = useState<MoodScore[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
   
   const activeMood = hoveredMood || selectedMood;
   const activeMoodData = activeMood ? MOODS[activeMood] : null;
+  
+  // AI-powered mood detection
+  useEffect(() => {
+    if (userInput.trim().length > 3) {
+      const detected = detectMood(userInput);
+      setSuggestions(detected);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  }, [userInput]);
   
   const handleMoodClick = (moodId: MoodType) => {
     setSelectedMood(moodId);
@@ -95,7 +111,7 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
             initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-center mb-16"
+            className="text-center mb-12"
           >
             <h1 className="text-6xl md:text-7xl font-bold mb-6 tracking-tight">
               <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
@@ -105,8 +121,91 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto font-light">
-              Choose your emotional state
+              Tell me how you're feeling, or choose below
             </p>
+          </motion.div>
+          
+          {/* AI-Powered Mood Input */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+            className="max-w-3xl mx-auto mb-12 relative"
+          >
+            <div className="relative glass-strong backdrop-blur-2xl rounded-3xl border-2 border-white/20 p-2 shadow-2xl">
+              <textarea
+                value={userInput}
+                onChange={(e) => setUserInput(e.target.value)}
+                placeholder="Type how you're feeling... (e.g., 'feeling creative today' or 'need to relax')"
+                className="w-full bg-transparent text-white placeholder-white/40 px-6 py-4 text-lg font-light resize-none focus:outline-none min-h-[80px] rounded-2xl"
+                rows={2}
+              />
+              
+              {/* AI indicator */}
+              {userInput.length > 3 && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1 rounded-full bg-violet-500/20 backdrop-blur-sm border border-violet-400/30"
+                >
+                  <motion.div
+                    className="w-2 h-2 rounded-full bg-violet-400"
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.5, 1, 0.5] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  />
+                  <span className="text-xs font-medium text-violet-300">AI analyzing</span>
+                </motion.div>
+              )}
+            </div>
+            
+            {/* AI Suggestions */}
+            <AnimatePresence>
+              {showSuggestions && suggestions.length > 0 && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="mt-4 p-4 glass-strong backdrop-blur-2xl rounded-2xl border border-white/20"
+                >
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-sm font-medium text-violet-300">🧠 AI Suggestions</span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    {suggestions.slice(0, 3).map((suggestion) => {
+                      const moodData = MOODS[suggestion.mood.toUpperCase() as MoodType];
+                      if (!moodData) return null;
+                      
+                      return (
+                        <motion.button
+                          key={suggestion.mood}
+                          initial={{ scale: 0.8, opacity: 0 }}
+                          animate={{ scale: 1, opacity: 1 }}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                          onClick={() => {
+                            setSelectedMood(suggestion.mood.toUpperCase() as MoodType);
+                            setUserInput('');
+                            setSuggestions([]);
+                          }}
+                          className="flex items-center gap-2 px-4 py-2 rounded-xl glass border border-white/20 hover:border-white/40 transition-all group"
+                        >
+                          <span className="text-lg">{moodData.icon}</span>
+                          <div className="text-left">
+                            <div className="text-sm font-medium text-white">{moodData.label}</div>
+                            <div className="text-xs text-white/60">
+                              {Math.round(suggestion.confidence)}% match
+                            </div>
+                          </div>
+                        </motion.button>
+                      );
+                    })}
+                  </div>
+                  <div className="mt-3 text-xs text-white/50 font-light italic">
+                    {suggestions[0]?.reason}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </motion.div>
           
           {/* Mood Selection Grid */}
