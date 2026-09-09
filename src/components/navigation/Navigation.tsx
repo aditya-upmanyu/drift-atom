@@ -23,7 +23,7 @@ export function Navigation() {
         aria-label="Main navigation"
       >
         <div className="glass-strong rounded-full px-4 py-3 flex items-center gap-1 border-2 border-white/10 shadow-2xl backdrop-blur-2xl">
-          {navItems.map((item, index) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             return (
               <NavLink
