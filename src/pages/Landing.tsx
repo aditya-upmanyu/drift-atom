@@ -2,7 +2,6 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Scene, DriftCore, ParticleField, FloatingOrb } from '../components/3d';
-import { Button } from '../components/common/Button';
 
 export function Landing() {
   const navigate = useNavigate();
@@ -64,24 +63,48 @@ export function Landing() {
             transition={{ duration: 1, delay: 0.3 }}
             className="mb-8"
           >
-            <h1 className="text-8xl md:text-9xl font-bold tracking-tighter mb-6">
-              <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            {/* DRIFT Logo with Premium Styling */}
+            <motion.h1 
+              className="text-8xl md:text-9xl font-black tracking-wider mb-6 relative"
+              style={{
+                textShadow: `
+                  0 0 30px rgba(139, 92, 246, 0.4),
+                  0 0 60px rgba(168, 85, 247, 0.3),
+                  0 2px 10px rgba(0, 0, 0, 0.5)
+                `,
+                letterSpacing: '0.08em'
+              }}
+            >
+              <span className="bg-gradient-to-r from-violet-300 via-purple-300 to-pink-300 bg-clip-text text-transparent animate-pulse">
                 DRIFT
               </span>
-            </h1>
+              {/* Animated shimmer effect overlay */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent rounded-lg"
+                initial={{ x: '-100%' }}
+                animate={{ x: '100%' }}
+                transition={{ duration: 3, repeat: Infinity, delay: 0.5 }}
+                style={{ width: '30%', filter: 'blur(20px)' }}
+              />
+            </motion.h1>
+            
+            {/* Main Tagline */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-3xl md:text-4xl text-white/80 font-light mb-4"
+              className="text-3xl md:text-4xl font-semibold text-white mb-3 tracking-wide"
             >
               Social, without the scroll.
             </motion.div>
+            
+            {/* Subtext */}
             <motion.p
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 1.2 }}
-              className="text-xl md:text-2xl text-white/60 max-w-2xl mx-auto"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
+              className="text-xl md:text-2xl text-white/70 max-w-2xl mx-auto tracking-tight"
+              style={{ lineHeight: 1.4 }}
             >
               Find people in the same moment.
             </motion.p>
@@ -92,32 +115,84 @@ export function Landing() {
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 1.5 }}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col sm:flex-row gap-6"
           >
-            <Button
-              variant="primary"
-              size="lg"
+            {/* Primary Button - Premium Enhanced */}
+            <motion.button
               onClick={handleEnterDrift}
-              className="group relative overflow-hidden"
+              className="group relative px-10 py-5 text-lg font-bold rounded-2xl overflow-hidden"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
-              <span className="relative z-10 flex items-center gap-2">
+              {/* Gradient background */}
+              <div className="absolute inset-0 bg-gradient-to-r from-violet-600 via-purple-600 to-indigo-600 group-hover:from-violet-500 group-hover:via-purple-500 group-hover:to-indigo-500 transition-all duration-300" />
+              
+              {/* Inner highlight (glassy effect) */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              {/* Glow effect */}
+              <div className="absolute inset-0 shadow-2xl shadow-violet-500/50 group-hover:shadow-violet-400/70 transition-shadow duration-300 rounded-2xl" />
+              
+              {/* Animated gradient sweep */}
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100"
+                initial={{ x: '-100%' }}
+                whileHover={{ x: '100%' }}
+                transition={{ duration: 0.8 }}
+              />
+              
+              {/* Border glow */}
+              <div className="absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-white/20 via-white/10 to-white/20 bg-clip-border opacity-50 group-hover:opacity-100 transition-opacity" />
+              
+              {/* Content */}
+              <span className="relative z-10 flex items-center justify-center gap-2 text-white">
                 Enter the Drift
-                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <motion.span
+                  className="inline-block"
+                  initial={{ x: 0 }}
+                  whileHover={{ x: 4 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  <ArrowRight className="w-5 h-5" />
+                </motion.span>
               </span>
-            </Button>
+            </motion.button>
             
-            <Button
-              variant="glass"
-              size="lg"
+            {/* Secondary Button - Frosted Glass Enhanced */}
+            <motion.button
               onClick={() => {
                 document.getElementById('story')?.scrollIntoView({ behavior: 'smooth' });
               }}
+              className="group relative px-10 py-5 text-lg font-bold rounded-2xl overflow-hidden"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
             >
-              <span className="flex items-center gap-2">
-                <Sparkles className="w-5 h-5" />
+              {/* Frosted glass background */}
+              <div className="absolute inset-0 glass-strong opacity-100 group-hover:opacity-110" />
+              
+              {/* Gradient border glow */}
+              <div className="absolute inset-0 rounded-2xl border-2 border-transparent bg-gradient-to-r from-violet-400/30 via-purple-400/20 to-pink-400/30 bg-clip-border opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              {/* Soft inner glow on hover */}
+              <div className="absolute inset-0 rounded-2xl bg-gradient-to-t from-transparent via-white/5 to-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              {/* Subtle shadow glow */}
+              <div className="absolute inset-0 shadow-xl shadow-white/10 group-hover:shadow-white/20 transition-shadow duration-300 rounded-2xl" />
+              
+              {/* Content */}
+              <span className="relative z-10 flex items-center justify-center gap-2 text-white">
+                <motion.span
+                  initial={{ scale: 1, rotate: 0 }}
+                  whileHover={{ scale: 1.2, rotate: 10 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Sparkles className="w-5 h-5" />
+                </motion.span>
                 Explore how it works
               </span>
-            </Button>
+            </motion.button>
           </motion.div>
           
           {/* Scroll indicator */}
@@ -414,23 +489,59 @@ export function Landing() {
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
             >
-              <h2 className="text-7xl md:text-8xl font-bold mb-12 tracking-tighter">
-                <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+              <h2 className="text-7xl md:text-8xl font-black mb-12 tracking-tight">
+                <span 
+                  className="bg-gradient-to-r from-violet-300 via-purple-300 to-pink-300 bg-clip-text text-transparent"
+                  style={{
+                    textShadow: `
+                      0 0 30px rgba(139, 92, 246, 0.3),
+                      0 0 60px rgba(168, 85, 247, 0.2)
+                    `,
+                  }}
+                >
                   Ready to Drift?
                 </span>
               </h2>
               
-              <Button
-                variant="primary"
-                size="lg"
+              {/* Enhanced Premium Button */}
+              <motion.button
                 onClick={handleEnterDrift}
-                className="group text-xl px-12 py-6"
+                className="group relative px-12 py-6 text-2xl font-bold rounded-2xl overflow-hidden mx-auto block"
+                whileHover={{ scale: 1.04, y: -3 }}
+                whileTap={{ scale: 0.96 }}
+                transition={{ type: "spring", stiffness: 400, damping: 20 }}
               >
-                <span className="flex items-center gap-3">
+                {/* Gradient background with depth */}
+                <div className="absolute inset-0 bg-gradient-to-b from-violet-600 to-purple-700 group-hover:from-violet-500 group-hover:to-purple-600 transition-all duration-300" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:via-white/20 transition-all duration-300" />
+                
+                {/* Premium glow */}
+                <div className="absolute inset-0 shadow-2xl shadow-purple-500/60 group-hover:shadow-purple-400/80 transition-shadow duration-300 rounded-2xl" />
+                
+                {/* Animated light sweep */}
+                <motion.div
+                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent opacity-0 group-hover:opacity-100"
+                  initial={{ x: '-100%' }}
+                  whileHover={{ x: '100%' }}
+                  transition={{ duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+                />
+                
+                {/* Hover border */}
+                <div className="absolute inset-0 rounded-2xl border-2 border-white/20 group-hover:border-white/40 transition-colors opacity-50 group-hover:opacity-100" />
+                
+                {/* Content with micro animations */}
+                <span className="relative z-10 flex items-center justify-center gap-3 text-white">
                   Enter the Drift
-                  <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+                  <motion.span
+                    className="inline-block"
+                    initial={{ x: 0 }}
+                    whileHover={{ x: 6 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  >
+                    <ArrowRight className="w-6 h-6" />
+                  </motion.span>
                 </span>
-              </Button>
+              </motion.button>
             </motion.div>
           </div>
         </motion.section>
