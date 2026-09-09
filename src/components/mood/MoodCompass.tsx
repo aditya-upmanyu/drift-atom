@@ -114,7 +114,7 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
           >
             {Object.entries(MOODS).map(([moodId, mood], index) => {
               const isSelected = selectedMood === moodId;
@@ -123,72 +123,201 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
               return (
                 <motion.button
                   key={moodId}
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+                  initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  transition={{ 
+                    delay: 0.5 + index * 0.1, 
+                    duration: 0.6,
+                    type: "spring",
+                    stiffness: 100
+                  }}
                   onClick={() => handleMoodClick(moodId as MoodType)}
                   onMouseEnter={() => setHoveredMood(moodId as MoodType)}
                   onMouseLeave={() => setHoveredMood(null)}
-                  whileHover={{ scale: 1.05, y: -8 }}
+                  whileHover={{ scale: 1.08, y: -12 }}
                   whileTap={{ scale: 0.95 }}
                   className={`
-                    relative overflow-hidden rounded-3xl p-8
-                    transition-all duration-300
+                    relative overflow-hidden rounded-3xl p-8 text-left
+                    transition-all duration-500 group
                     ${isSelected 
-                      ? 'glass-strong ring-2 ring-white/40' 
+                      ? 'glass-strong ring-4 ring-white/50 shadow-2xl' 
                       : isHovered
-                      ? 'glass-strong'
-                      : 'glass'
+                      ? 'glass-strong shadow-2xl'
+                      : 'glass shadow-xl'
                     }
+                    backdrop-blur-2xl border-2
+                    ${isSelected || isHovered ? 'border-white/30' : 'border-white/10'}
                   `}
                   style={{
                     boxShadow: isSelected || isHovered 
-                      ? `0 8px 32px ${mood.color}40` 
+                      ? `0 20px 60px -15px ${mood.color}60, 0 0 0 1px ${mood.color}20` 
                       : undefined,
                   }}
                 >
-                  {/* Colored background on hover/select */}
-                  <div
-                    className={`
-                      absolute inset-0 opacity-0 transition-opacity duration-300
-                      ${(isSelected || isHovered) && 'opacity-10'}
-                    `}
-                    style={{ backgroundColor: mood.color }}
+                  {/* Animated gradient background */}
+                  <motion.div
+                    className="absolute inset-0 opacity-0 transition-opacity duration-500"
+                    animate={{
+                      opacity: (isSelected || isHovered) ? 0.15 : 0,
+                    }}
+                    style={{
+                      background: `radial-gradient(circle at 30% 30%, ${mood.color}60, transparent 70%)`,
+                    }}
+                  />
+                  
+                  {/* Glow effect */}
+                  {(isSelected || isHovered) && (
+                    <motion.div
+                      className="absolute -inset-1 rounded-3xl blur-2xl opacity-30"
+                      style={{ backgroundColor: mood.color }}
+                      animate={{
+                        scale: [1, 1.05, 1],
+                      }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                  )}
+                  
+                  {/* Top corner decoration */}
+                  <div 
+                    className="absolute top-0 right-0 w-32 h-32 rounded-bl-full opacity-10 transition-opacity duration-500"
+                    style={{ 
+                      backgroundColor: mood.color,
+                      opacity: (isSelected || isHovered) ? 0.2 : 0.05
+                    }}
                   />
                   
                   {/* Content */}
                   <div className="relative z-10">
-                    {/* Color indicator */}
-                    <div
-                      className="w-16 h-16 rounded-2xl mb-4 transition-transform duration-300"
-                      style={{
-                        background: `linear-gradient(135deg, ${mood.color}, ${mood.color}cc)`,
-                        transform: isSelected ? 'scale(1.1)' : isHovered ? 'scale(1.05)' : 'scale(1)',
-                        boxShadow: `0 4px 16px ${mood.color}60`,
+                    {/* Icon/Color indicator */}
+                    <motion.div
+                      className="relative mb-6"
+                      animate={{
+                        scale: isSelected ? 1.1 : isHovered ? 1.05 : 1,
                       }}
-                    />
+                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                    >
+                      <motion.div
+                        className="w-20 h-20 rounded-2xl relative overflow-hidden"
+                        style={{
+                          background: `linear-gradient(135deg, ${mood.color}, ${mood.color}cc)`,
+                          boxShadow: `0 8px 24px -6px ${mood.color}80`,
+                        }}
+                      >
+                        {/* Inner glow */}
+                        <div 
+                          className="absolute inset-0 rounded-2xl"
+                          style={{
+                            background: `radial-gradient(circle at 40% 40%, rgba(255,255,255,0.3), transparent 60%)`,
+                          }}
+                        />
+                        
+                        {/* Animated shine */}
+                        {(isSelected || isHovered) && (
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-transparent"
+                            animate={{
+                              x: ['-100%', '100%'],
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              repeat: Infinity,
+                              ease: "easeInOut",
+                              repeatDelay: 1
+                            }}
+                          />
+                        )}
+                        
+                        {/* Icon */}
+                        <div className="absolute inset-0 flex items-center justify-center text-4xl">
+                          {mood.icon}
+                        </div>
+                      </motion.div>
+                      
+                      {/* Floating particles effect */}
+                      {isHovered && (
+                        <>
+                          {[...Array(3)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className="absolute w-2 h-2 rounded-full"
+                              style={{ backgroundColor: mood.color }}
+                              initial={{ 
+                                x: 10, 
+                                y: 10, 
+                                opacity: 0,
+                                scale: 0
+                              }}
+                              animate={{ 
+                                x: Math.cos((i / 3) * Math.PI * 2) * 40,
+                                y: Math.sin((i / 3) * Math.PI * 2) * 40,
+                                opacity: [0, 1, 0],
+                                scale: [0, 1, 0]
+                              }}
+                              transition={{ 
+                                duration: 1.5,
+                                repeat: Infinity,
+                                delay: i * 0.2,
+                                ease: "easeOut"
+                              }}
+                            />
+                          ))}
+                        </>
+                      )}
+                    </motion.div>
                     
-                    <h3 className="text-2xl font-bold mb-2">{mood.label}</h3>
-                    <p className="text-sm text-white/60 leading-relaxed">
-                      {mood.description}
-                    </p>
+                    {/* Text content */}
+                    <div className="space-y-3">
+                      <h3 className="text-3xl font-bold tracking-tight group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-white/80 transition-all">
+                        {mood.label}
+                      </h3>
+                      <p className="text-sm text-white/70 leading-relaxed font-light min-h-[40px]">
+                        {mood.description}
+                      </p>
+                    </div>
                     
                     {/* Selection indicator */}
                     {isSelected && (
                       <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className="absolute top-4 right-4"
+                        initial={{ scale: 0, opacity: 0, rotate: -180 }}
+                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                        className="absolute top-6 right-6"
+                        transition={{ type: "spring", stiffness: 200, damping: 15 }}
                       >
                         <div 
-                          className="w-8 h-8 rounded-full flex items-center justify-center"
-                          style={{ backgroundColor: `${mood.color}40` }}
+                          className="w-10 h-10 rounded-full flex items-center justify-center ring-4 ring-white/20"
+                          style={{ 
+                            backgroundColor: `${mood.color}60`,
+                            boxShadow: `0 0 20px ${mood.color}60`
+                          }}
                         >
-                          <div 
-                            className="w-4 h-4 rounded-full"
+                          <motion.div 
+                            className="w-5 h-5 rounded-full"
                             style={{ backgroundColor: mood.color }}
+                            animate={{
+                              scale: [1, 1.2, 1],
+                            }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }}
                           />
                         </div>
+                      </motion.div>
+                    )}
+                    
+                    {/* Hover indicator */}
+                    {isHovered && !isSelected && (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="absolute bottom-6 right-6 text-xs text-white/60 font-medium"
+                      >
+                        Click to select
                       </motion.div>
                     )}
                   </div>
@@ -201,18 +330,25 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
           <AnimatePresence>
             {selectedMood && (
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
+                initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 className="text-center"
               >
                 <Button
-                  variant="primary"
-                  size="lg"
+                  variant="gradient"
+                  size="xl"
                   onClick={handleContinue}
-                  className="px-16 py-6 text-xl"
+                  className="px-16 min-w-[280px] shadow-2xl"
                 >
-                  Continue to Drift
+                  <span>Continue to Drift</span>
+                  <motion.span
+                    animate={{ x: [0, 5, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    →
+                  </motion.span>
                 </Button>
               </motion.div>
             )}
