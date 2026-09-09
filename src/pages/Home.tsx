@@ -118,27 +118,48 @@ export function Home() {
           className="p-6 md:p-8"
         >
           <div className="max-w-7xl mx-auto">
-            <div className="flex items-start justify-between">
+            <div className="flex items-start justify-between flex-wrap gap-4">
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-2 tracking-tight">
+                <motion.h1 
+                  className="text-5xl md:text-6xl font-bold mb-3 tracking-tight"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.2 }}
+                >
                   <span className="bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
                     Drift Field
                   </span>
-                </h1>
-                <p className="text-white/60 text-lg">
-                  {user?.displayName} {user?.avatar} · {user?.currentMood}
-                </p>
+                </motion.h1>
+                <motion.p 
+                  className="text-white/70 text-lg flex items-center gap-2"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  <span className="text-2xl">{user?.avatar}</span>
+                  <span className="font-medium">{user?.displayName}</span>
+                  <span className="text-white/40">·</span>
+                  <span className="px-3 py-1 rounded-full glass text-sm border border-white/10">
+                    {user?.currentMood}
+                  </span>
+                </motion.p>
               </div>
               
-              <Button
-                variant="primary"
-                size="md"
-                onClick={() => navigate('/create')}
-                className="flex items-center gap-2"
+              <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
               >
-                <Plus className="w-5 h-5" />
-                Create Current
-              </Button>
+                <Button
+                  variant="gradient"
+                  size="md"
+                  onClick={() => navigate('/create')}
+                  className="shadow-2xl"
+                >
+                  <Plus className="w-5 h-5" />
+                  <span>Create Current</span>
+                </Button>
+              </motion.div>
             </div>
           </div>
         </motion.div>
@@ -151,37 +172,49 @@ export function Home() {
           className="px-6 md:px-8"
         >
           <div className="max-w-7xl mx-auto">
-            <div className="glass rounded-2xl px-6 py-4 inline-flex items-center gap-8">
-              <div className="text-center">
-                <div className="text-2xl font-bold text-violet-400">
+            <div className="glass-strong rounded-3xl px-8 py-5 inline-flex items-center gap-10 border-2 border-white/10 shadow-2xl backdrop-blur-2xl">
+              <motion.div 
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <div className="text-3xl font-bold bg-gradient-to-r from-violet-400 to-purple-400 bg-clip-text text-transparent">
                   {MOCK_CURRENTS.length}
                 </div>
-                <div className="text-xs text-white/60 uppercase tracking-wider">
+                <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold mt-1">
                   Active Currents
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="w-px h-8 bg-white/10" />
+              <div className="w-px h-12 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
               
-              <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">
+              <motion.div 
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <div className="text-3xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
                   {MOCK_CURRENTS.reduce((sum, c) => sum + c.presenceCount, 0)}
                 </div>
-                <div className="text-xs text-white/60 uppercase tracking-wider">
+                <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold mt-1">
                   People Drifting
                 </div>
-              </div>
+              </motion.div>
               
-              <div className="w-px h-8 bg-white/10" />
+              <div className="w-px h-12 bg-gradient-to-b from-transparent via-white/20 to-transparent" />
               
-              <div className="text-center">
-                <div className="text-2xl font-bold text-pink-400">
+              <motion.div 
+                className="text-center"
+                whileHover={{ scale: 1.05 }}
+                transition={{ type: "spring", stiffness: 400 }}
+              >
+                <div className="text-3xl font-bold bg-gradient-to-r from-pink-400 to-rose-400 bg-clip-text text-transparent">
                   {MOCK_CURRENTS.filter(c => c.remainingTime < 3600).length}
                 </div>
-                <div className="text-xs text-white/60 uppercase tracking-wider">
+                <div className="text-[10px] text-white/60 uppercase tracking-widest font-bold mt-1">
                   Ending Soon
                 </div>
-              </div>
+              </motion.div>
             </div>
           </div>
         </motion.div>
@@ -192,14 +225,20 @@ export function Home() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="text-center"
+            className="text-center space-y-2"
           >
-            <p className="text-white/40 text-sm mb-2">
-              Navigate the field with your mouse
-            </p>
-            <p className="text-white/60 text-lg font-medium">
-              Click a node to enter a Current
-            </p>
+            <motion.div
+              animate={{ y: [0, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+              className="inline-block px-6 py-3 glass-strong rounded-2xl border-2 border-white/20 mb-4"
+            >
+              <p className="text-white/50 text-sm font-mono mb-1">
+                🖱️ Drag to rotate • Scroll to zoom
+              </p>
+              <p className="text-white font-bold text-lg">
+                Click a node to enter
+              </p>
+            </motion.div>
           </motion.div>
         </div>
       </div>
