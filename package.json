@@ -1,8 +1,21 @@
 {
-  "name": "temp-drift",
+  "name": "drift-social-platform",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "DRIFT - Social, Without the Scroll. A new social experience where people connect through shared feelings and temporary moments.",
   "type": "module",
+  "author": "Your Name",
+  "license": "MIT",
+  "keywords": [
+    "social-platform",
+    "react",
+    "threejs",
+    "3d",
+    "typescript",
+    "vite",
+    "tailwindcss",
+    "webgl"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
