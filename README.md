@@ -1,219 +1,138 @@
-# DRIFT ATOM — Social, Without the Scroll
+# 🌌 DRIFT ATOM
 
-> A new social experience where people connect through shared feelings, temporary moments, and meaningful interactions.
+**Social, without the scroll.**
 
-## 🌌 Overview
+A revolutionary 3D social platform where people connect through shared feelings and temporary moments.
 
-DRIFT reimagines social connection. Instead of followers, feeds, and likes, DRIFT creates temporary social moments called **Currents** where people meet around shared feelings and experiences. When Currents end, meaningful moments become memories in your personal constellation.
+## ✨ What is DRIFT ATOM?
 
-## 🎯 Problem Statement
+DRIFT ATOM reimagines social connection. Instead of infinite feeds, followers, and permanent posts, DRIFT creates:
 
-**"REIMAGINE SOCIAL — Design the Next Generation of Social Interaction."**
+- **🌊 DRIFT FIELD** — A 3D constellation of temporary social moments
+- **💫 Currents** — Time-limited conversations around shared emotions
+- **🔮 Ripples** — Meaningful reactions that create visual particle effects
+- **🎨 Moods** — Connect based on emotional state (Calm, Curious, Creative, Nostalgic, Motivated, Reflective)
+- **✨ Memories** — Save meaningful moments as your personal constellation
 
-Existing social platforms are dominated by:
-- Infinite feeds
-- Likes and followers
-- Algorithmic content
-- Permanent posts
-- Popularity metrics
+## 🚀 Quick Start
 
-DRIFT challenges this by creating a social universe built around **temporary presence, emotional connection, and meaningful interaction**.
+### Development
+```bash
+npm install
+npm run dev
+```
 
-## ✨ Key Innovations
-
-### 1. **DRIFT FIELD** — A Living Social Universe
-No infinite feed. Instead, explore a 3D constellation of active social moments. Currents appear as glowing spatial nodes that you can navigate and enter.
-
-### 2. **CURRENTS** — Temporary Social Moments
-Every Current is temporary (1-4 hours). When the countdown ends, the moment passes. No permanent posts, no lingering content.
-
-### 3. **RIPPLES** — Emotional Reactions
-Replace likes with meaningful reactions:
-- **Resonate** — Deep connection
-- **Feel This** — Emotional resonance
-- **Thinking** — Thought-provoking
-- **Warmth** — Comforting presence
-- **Energy** — Motivating feeling
-
-Each ripple creates a visual particle effect.
-
-### 4. **MOMENT THREADS** — Connected Thoughts
-Instead of flat comments, thoughts branch into connected threads that visualize the flow of conversation.
-
-### 5. **DRIFT TOGETHER** — Temporary Connections
-When two people repeatedly overlap through shared reactions and moods, they can form temporary connections. No permanent follower graph.
-
-### 6. **MEMORY TRAIL** — Your Constellation
-When Currents end, you can save meaningful moments. Your memories form a personal constellation timeline, not a public profile.
-
-### 7. **DRIFT GUIDE** — AI Companion
-A helpful orb assistant that guides you through the experience (with optional Gemini AI integration).
-
-## 🎨 Design Philosophy
-
-DRIFT combines:
-- **Cinematic 3D environments** using Three.js / React Three Fiber
-- **Premium dark aesthetic** with atmospheric particle systems
-- **Mood-driven color system** (Calm, Curious, Creative, Nostalgic, Motivated, Reflective)
-- **Spatial interaction design** — the interface IS the social universe
-- **Spring physics and smooth transitions** for fluid navigation
-
-The goal: Create an experience that feels like entering a living social world, not browsing a feed.
-
-## 🛠 Technology Stack
-
-- **Frontend Framework**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **3D Graphics**: Three.js + React Three Fiber + Drei
-- **Styling**: Tailwind CSS
-- **Animation**: Framer Motion
-- **State Management**: Zustand
-- **Routing**: React Router v6
-- **Icons**: Lucide React
-
-## 🚀 Local Setup
-
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd frontend-hackathon-project
-   ```
-
-2. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables** (optional)
-   ```bash
-   cp .env.example .env
-   # Edit .env and add your Gemini API key if you want AI features
-   ```
-
-4. **Run development server**
-   ```bash
-   npm run dev
-   ```
-
-5. **Build for production**
-   ```bash
-   npm run build
-   ```
-
-6. **Preview production build**
-   ```bash
-   npm run preview
-   ```
-
-## 🌐 Netlify Deployment
-
-### Quick Deploy
-
-1. **Push to GitHub**
-   ```bash
-   git init
-   git add .
-   git commit -m "Initial commit"
-   git branch -M main
-   git remote add origin <your-repo-url>
-   git push -u origin main
-   ```
-
-2. **Deploy to Netlify**
-   - Go to [Netlify](https://app.netlify.com/)
-   - Click "Add new site" → "Import an existing project"
-   - Connect your GitHub repository
-   - Build settings (auto-detected from `netlify.toml`):
-     - **Build command**: `npm run build`
-     - **Publish directory**: `dist`
-   - Click "Deploy site"
-
-### Environment Variables on Netlify
-
-If using AI Guide with Gemini:
-1. Go to Site settings → Environment variables
-2. Add `VITE_GEMINI_API_KEY` with your API key
-3. Redeploy
-
-**Note**: DRIFT works perfectly without API keys. The AI Guide automatically falls back to local responses.
-
-## 🎮 User Journey
-
-1. **Landing** — Cinematic 3D hero introduces the concept
-2. **Mood Entry** — Choose your current emotional state
-3. **DRIFT FIELD** — Explore the 3D constellation of active Currents
-4. **Enter Current** — Join a temporary social moment
-5. **Interact** — Leave Moments, send Ripples, create Threads
-6. **Connect** — Form temporary connections with others
-7. **Remember** — Save meaningful moments to your Memory Trail
-8. **Constellation** — View your personal drift patterns
+### Production Build
+```bash
+npm run build
+npm run preview
+```
 
 ## 📁 Project Structure
 
 ```
-src/
-├── components/
-│   ├── 3d/              # Three.js 3D components
-│   ├── common/          # Shared UI components
-│   ├── current/         # Current-specific components
-│   ├── mood/            # Mood selection components
-│   └── ripple/          # Ripple interaction system
-├── pages/               # Main application pages
-├── data/                # Demo seed data
-├── hooks/               # Custom React hooks
-├── store/               # Zustand state management
-├── types/               # TypeScript type definitions
-└── utils/               # Utility functions
+drift-atom/
+├── src/                    # Source code
+│   ├── components/        # React components
+│   ├── pages/             # Page components
+│   ├── data/              # Demo seed data
+│   ├── store/             # Zustand state management
+│   ├── types/             # TypeScript definitions
+│   └── index.css          # Global styles
+├── config/                # Configuration files
+├── docs/                  # Documentation
+├── public/                # Static assets
+├── dist/                  # Build output (production)
+├── package.json           # Dependencies
+└── index.html             # HTML entry point
 ```
 
-## 🎯 Key Features Implemented
+## 🛠 Tech Stack
+
+- **React 19.2.8** — UI framework
+- **TypeScript 6.0.2** — Type safety
+- **Three.js 0.186.0** — 3D graphics
+- **React Three Fiber 9.7.0** — React for 3D
+- **Tailwind CSS 4.3.3** — Styling
+- **Framer Motion 13.2.0** — Animations
+- **Vite 8.2.2** — Build tool
+- **Zustand 5.0.15** — State management
+
+## 📊 Build Stats
+
+- **JavaScript**: 408 KB (gzipped)
+- **CSS**: 12 KB (gzipped)
+- **HTML**: 1 KB (gzipped)
+- **Total**: ~420 KB (production)
+
+## 📖 Documentation
+
+See the `docs/` folder for:
+
+- **[docs/README.md](docs/README.md)** — Full project overview
+- **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** — Deployment guide
+- **[docs/START_HERE.md](docs/START_HERE.md)** — Quick start
+- **[docs/plan.md](docs/plan.md)** — Original product specification
+
+## 🎯 Key Features
 
 ✅ Immersive 3D landing page with particle systems  
 ✅ Atmospheric mood selection experience  
 ✅ 3D DRIFT FIELD constellation navigation  
-✅ Cinematic Current detail environments  
+✅ Cinematic Current detail pages  
 ✅ Visual Ripple interaction system  
-✅ Rich demo data with 12 unique Currents  
-✅ Responsive design for desktop and mobile  
-✅ Accessibility features (keyboard nav, ARIA labels)  
-✅ Premium dark aesthetic with mood-driven colors  
-✅ Smooth page transitions and micro-interactions  
+✅ 12 demo Currents with rich content  
 ✅ Memory Trail constellation timeline  
 ✅ Personal Constellation profile  
-✅ Loading states and empty states  
+✅ Responsive design (desktop + mobile)  
+✅ Accessibility features (keyboard nav, ARIA)  
+✅ Premium dark aesthetic  
 
-## 🔮 Future Enhancements
+## 🌐 Live Demo
 
-- Backend integration for real-time presence
-- WebSocket connections for live Current updates
-- Advanced AI Guide with Gemini integration
-- Create Current flow with release animation
-- Drift Together temporary connection system
-- Moment Thread branching visualization
-- Advanced 3D shader effects
-- Mobile app (React Native)
-- Progressive Web App (PWA) support
+**GitHub**: https://github.com/aditya-upmanyu/DRIFT
 
-## 🎨 Design References
+**Netlify**: [Deploy with Netlify](config/netlify.toml)
 
-DRIFT draws inspiration from:
-- Premium 3D website design (Awwwards-level creativity)
-- Cinematic UI/UX with spatial depth
-- Constellation and cosmic visualization patterns
-- Atmospheric particle systems
-- Glassmorphism and premium dark aesthetics
-- Experimental social interaction models
+## 🎨 Design Philosophy
+
+DRIFT combines:
+- **Cinematic 3D environments** using Three.js
+- **Premium dark aesthetic** with atmospheric particles
+- **Mood-driven colors** (unique gradient for each emotional state)
+- **Spatial interaction design** — UI IS the social universe
+- **Spring physics animations** for fluid, natural motion
+
+## 🚀 Deployment
+
+### GitHub
+Push to: https://github.com/aditya-upmanyu/DRIFT
+
+### Netlify
+1. Go to https://app.netlify.com/
+2. "Add new site" → "Import from GitHub"
+3. Select `DRIFT` repository
+4. Netlify auto-detects settings from `config/netlify.toml`
+5. Deploy!
+
+## 🔐 Security
+
+- ✅ No hardcoded secrets
+- ✅ Environment variables in `config/.env.example`
+- ✅ Never commit `.env` files
+- ✅ `.gitignore` configured properly
+- ✅ Safe to open source
 
 ## 📝 License
 
-This project is created for educational and hackathon purposes.
+MIT License — See LICENSE file
 
 ## 🙏 Acknowledgments
 
-Built with passion for reimagining social connection. Special thanks to the open-source community for the incredible tools that made this possible.
+Built with passion for reimagining social connection using cutting-edge web technologies.
 
 ---
 
-**Ready to drift?** 🌊
+*"Social, without the scroll."* 🌊
 
-[Enter the Drift →](https://your-netlify-url.netlify.app)
+**[View Full Documentation →](docs/README.md)**
