@@ -64,6 +64,7 @@ export function Scene({
           minDistance={10}
           enableDamping
           dampingFactor={0.05}
+          makeDefault
         />
       )}
       

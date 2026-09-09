@@ -53,16 +53,23 @@ export function SpatialNode({ current, position, onClick, onHover }: SpatialNode
     }
   });
   
-  const handlePointerOver = () => {
+  const handlePointerOver = (e: any) => {
+    e.stopPropagation();
     setHovered(true);
     onHover?.(true);
     document.body.style.cursor = 'pointer';
   };
   
-  const handlePointerOut = () => {
+  const handlePointerOut = (e: any) => {
+    e.stopPropagation();
     setHovered(false);
     onHover?.(false);
     document.body.style.cursor = 'default';
+  };
+  
+  const handleClick = (e: any) => {
+    e.stopPropagation();
+    onClick?.();
   };
   
   return (
@@ -71,7 +78,7 @@ export function SpatialNode({ current, position, onClick, onHover }: SpatialNode
       <Sphere
         ref={meshRef}
         args={[1, 32, 32]}
-        onClick={onClick}
+        onClick={handleClick}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
       >
