@@ -1,4 +1,4 @@
-# DRIFT — Social, Without the Scroll
+# DRIFT ATOM — Social, Without the Scroll
 
 > A new social experience where people connect through shared feelings, temporary moments, and meaningful interactions.
 
