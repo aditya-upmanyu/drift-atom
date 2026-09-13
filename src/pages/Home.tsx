@@ -223,13 +223,29 @@ export function Home() {
         </motion.div>
         
         {/* Instructions */}
-        <div className="flex-1 flex items-end justify-center pb-12">
+        <div className="flex-1 flex items-center justify-center pb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
             className="text-center space-y-4 w-full max-w-5xl px-6"
           >
+            {/* Welcome Message */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.7, type: "spring" }}
+              className="mb-8 space-y-3"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-violet-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+                Welcome to the Drift Field
+              </h2>
+              <p className="text-white/70 text-lg max-w-2xl mx-auto leading-relaxed">
+                A space where moods flow, conversations drift, and connections emerge naturally. 
+                Choose your mood below and dive into the current.
+              </p>
+            </motion.div>
+
             <motion.div
               animate={{ y: [0, -5, 0] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}

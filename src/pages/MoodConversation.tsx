@@ -746,7 +746,7 @@ export function MoodConversation() {
           />
         </div>
 
-        {/* Bottom Navigation & Drift Field Link */}
+        {/* Bottom Navigation */}
         <div className="p-4 text-center border-t border-white/10 bg-black/40 backdrop-blur-xl">
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/60">
             <div className="flex items-center gap-2">
@@ -754,29 +754,18 @@ export function MoodConversation() {
               <span>Active Mood: <strong>{mood.label}</strong></span>
             </div>
 
-            <div className="flex items-center gap-3">
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => navigate(`/mood/${activeMood.toLowerCase()}`)}
-                className="glass px-4 py-2 rounded-xl text-white font-medium hover:border-white/30 transition-all cursor-pointer"
-              >
-                View {mood.label} Constellation
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.04 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => navigate('/home')}
-                className="group px-5 py-2 rounded-xl font-bold text-white transition-all cursor-pointer flex items-center gap-1.5 shadow-lg"
-                style={{
-                  background: `linear-gradient(135deg, ${mood.color}, ${mood.color}cc)`,
-                }}
-              >
-                <span>Enter 3D Drift Field</span>
-                <Sparkles className="w-3.5 h-3.5" />
-              </motion.button>
-            </div>
+            <motion.button
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.96 }}
+              onClick={() => navigate(`/mood/${activeMood.toLowerCase()}`)}
+              className="group px-5 py-2 rounded-xl font-bold text-white transition-all cursor-pointer flex items-center gap-1.5 shadow-lg"
+              style={{
+                background: `linear-gradient(135deg, ${mood.color}, ${mood.color}cc)`,
+              }}
+            >
+              <Sparkles className="w-4 h-4" />
+              <span>View {mood.label} Constellation</span>
+            </motion.button>
           </div>
         </div>
       </div>
