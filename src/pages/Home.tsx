@@ -63,6 +63,12 @@ export function Home() {
   }, [nodesWithPositions]);
   
   const handleNodeClick = (current: Current) => {
+    console.log('=== NAVIGATION DEBUG ===');
+    console.log('Current clicked:', current.title);
+    console.log('Current ID:', current.id);
+    console.log('Navigating to:', `/current/${current.id}`);
+    console.log('Onboarding complete:', useStore.getState().onboardingComplete);
+    console.log('========================');
     navigate(`/current/${current.id}`);
   };
   
@@ -220,12 +226,12 @@ export function Home() {
         </motion.div>
         
         {/* Instructions */}
-        <div className="flex-1 flex items-end justify-center pb-12 pointer-events-none">
+        <div className="flex-1 flex items-end justify-center pb-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="text-center space-y-2"
+            className="text-center space-y-4 w-full max-w-5xl px-6"
           >
             <motion.div
               animate={{ y: [0, -5, 0] }}
@@ -239,6 +245,24 @@ export function Home() {
                 Click a node to enter
               </p>
             </motion.div>
+            
+            {/* Quick Access Grid - 2D Fallback */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+              {MOCK_CURRENTS.slice(0, 4).map((current, idx) => (
+                <motion.button
+                  key={current.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.7 + idx * 0.1 }}
+                  onClick={() => handleNodeClick(current)}
+                  className="glass-strong rounded-xl p-3 text-left hover:bg-white/10 transition-all hover:scale-105 border border-white/10 hover:border-white/30"
+                >
+                  <div className="text-xs text-white/60 mb-1">{current.mood}</div>
+                  <div className="text-white font-semibold text-sm line-clamp-1">{current.title}</div>
+                  <div className="text-xs text-white/40 mt-1">{current.presenceCount} present</div>
+                </motion.button>
+              ))}
+            </div>
           </motion.div>
         </div>
       </div>

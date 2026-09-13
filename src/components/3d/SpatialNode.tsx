@@ -75,13 +75,20 @@ export function SpatialNode({ current, position, onClick, onHover }: SpatialNode
   
   return (
     <group position={position}>
+      {/* Invisible larger hitbox for easier clicking */}
+      <mesh
+        onClick={handleClick}
+        onPointerOver={handlePointerOver}
+        onPointerOut={handlePointerOut}
+      >
+        <sphereGeometry args={[1.5, 16, 16]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+      
       {/* Main node sphere - Highly interactive */}
       <mesh
         ref={meshRef}
         position={[0, 0, 0]}
-        onClick={handleClick}
-        onPointerOver={handlePointerOver}
-        onPointerOut={handlePointerOut}
       >
         <sphereGeometry args={[1, 32, 32]} />
         <meshPhysicalMaterial
