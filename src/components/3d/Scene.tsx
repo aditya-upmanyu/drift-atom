@@ -32,6 +32,7 @@ export function Scene({
         toneMapping: THREE.ACESFilmicToneMapping,
         toneMappingExposure: 1.2,
       }}
+      style={{ width: '100%', height: '100%' }}
     >
       {/* Camera */}
       <PerspectiveCamera

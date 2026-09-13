@@ -17,8 +17,8 @@ export function Home() {
   const nodesWithPositions = useMemo(() => {
     return MOCK_CURRENTS.map((current, index) => {
       const angle = (index / MOCK_CURRENTS.length) * Math.PI * 2;
-      const radius = 5 + Math.random() * 3;
-      const height = (Math.random() - 0.5) * 4;
+      const radius = 6 + Math.random() * 2; // Increased from 5
+      const height = (Math.random() - 0.5) * 3; // Reduced from 4
       
       return {
         current,
