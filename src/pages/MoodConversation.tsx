@@ -8,7 +8,7 @@ import {
   Bookmark, 
   Check 
 } from 'lucide-react';
-import { Scene, ParticleField, FloatingOrb } from '../components/3d';
+import { Scene, ParticleField } from '../components/3d';
 import { MessageComposer } from '../components/message/MessageComposer';
 import { RippleEffect } from '../components/ripple/RippleEffect';
 import { MOODS } from '../lib/constants';
@@ -383,13 +383,7 @@ export function MoodConversation() {
             size={0.024}
             speed={activeMood === 'CALM' ? 0.12 : activeMood === 'CURIOUS' ? 0.25 : 0.18}
           />
-          <FloatingOrb
-            position={[0, 0, -5]}
-            color={mood.color}
-            size={activeMood === 'CALM' ? 1.8 : activeMood === 'CURIOUS' ? 2.2 : 2.0}
-            speed={activeMood === 'CALM' ? 0.6 : 1.1}
-            intensity={1.5}
-          />
+          {/* Removed FloatingOrb to prevent clipping */}
         </Scene>
       </div>
 

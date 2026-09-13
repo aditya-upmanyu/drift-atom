@@ -10,8 +10,8 @@ interface MoodCompassProps {
   onSelectMood: (mood: MoodType) => void;
 }
 
-// Exactly the 3 requested moods
-export const AVAILABLE_MOODS: MoodType[] = ['CALM', 'CURIOUS', 'NOSTALGIC'];
+// All 6 available moods
+export const AVAILABLE_MOODS: MoodType[] = ['CALM', 'CURIOUS', 'CREATIVE', 'NOSTALGIC', 'MOTIVATED', 'REFLECTIVE'];
 
 export const MOOD_ICONS: Record<MoodType, string> = {
   CALM: '🌊',
@@ -22,14 +22,14 @@ export const MOOD_ICONS: Record<MoodType, string> = {
   REFLECTIVE: '🌌',
 };
 
-// 3D positions for the 3 mood orbs in space
+// 3D positions for all 6 mood orbs in space
 const moodPositions: Record<MoodType, [number, number, number]> = {
-  CALM: [-4, 0.5, 0],
-  CURIOUS: [0, 1.8, -1.5],
-  NOSTALGIC: [4, 0.5, 0],
-  CREATIVE: [0, 3, -2],
-  MOTIVATED: [3, -1, 1],
-  REFLECTIVE: [0, -2, -1],
+  CALM: [-5, 1, 0],
+  CURIOUS: [0, 2, -1.5],
+  CREATIVE: [-2.5, -1.5, 0],
+  NOSTALGIC: [5, 1, 0],
+  MOTIVATED: [2.5, -1.5, 0],
+  REFLECTIVE: [0, -2.5, -1],
 };
 
 export function MoodCompass({ onSelectMood }: MoodCompassProps) {
@@ -663,7 +663,7 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
                 >
                   <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full glass border border-white/10 text-white/60 text-sm shadow-md">
                     <Sparkles className="w-4 h-4 text-violet-300 animate-pulse" />
-                    <span>Select <strong>Calm</strong>, <strong>Curious</strong>, or <strong>Nostalgic</strong> above to enter</span>
+                    <span>Select a mood above to enter the conversation</span>
                   </div>
                 </motion.div>
               )}

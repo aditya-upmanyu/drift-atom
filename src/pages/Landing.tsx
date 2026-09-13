@@ -1,7 +1,7 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { Scene, DriftCore, ParticleField, FloatingOrb } from '../components/3d';
+import { Scene, DriftCore, ParticleField } from '../components/3d';
 
 export function Landing() {
   const navigate = useNavigate();
@@ -55,13 +55,7 @@ export function Landing() {
               speed={0.2}
             />
             
-            {/* Orbiting smaller orbs */}
-            <FloatingOrb position={[3, 2, 0]} color="#6366F1" size={0.4} speed={0.8} />
-            <FloatingOrb position={[-3, -1, 1]} color="#A855F7" size={0.3} speed={1.2} />
-            <FloatingOrb position={[2, -2, -1]} color="#EC4899" size={0.35} speed={0.6} />
-            <FloatingOrb position={[-2, 1.5, 2]} color="#06B6D4" size={0.3} speed={1.0} />
-            <FloatingOrb position={[4, -1, -2]} color="#8B5CF6" size={0.25} speed={0.9} />
-            <FloatingOrb position={[-4, 2, -1]} color="#C084FC" size={0.28} speed={0.7} />
+            {/* Orbiting smaller orbs - removed to prevent clipping */}
           </Scene>
         </div>
         
@@ -370,10 +364,6 @@ export function Landing() {
                 <div className="absolute inset-0">
                   <Scene cameraPosition={[0, 0, 12]}>
                     <ParticleField count={800} radius={10} color="#8B5CF6" size={0.04} />
-                    <FloatingOrb position={[0, 0, 0]} color="#8B5CF6" size={1} />
-                    <FloatingOrb position={[4, 2, -2]} color="#6366F1" size={0.7} />
-                    <FloatingOrb position={[-4, -1, 1]} color="#A855F7" size={0.8} />
-                    <FloatingOrb position={[3, -3, 0]} color="#EC4899" size={0.6} />
                   </Scene>
                 </div>
               </div>

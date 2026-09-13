@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowLeft, Users, Sparkles, Check } from 'lucide-react';
-import { Scene, ParticleField, FloatingOrb } from '../components/3d';
+import { Scene, ParticleField } from '../components/3d';
 import { MessageComposer } from '../components/message/MessageComposer';
 import { MOCK_CURRENTS } from '../data/currents';
 import { MOODS } from '../lib/constants';
@@ -208,33 +208,9 @@ export function CurrentRoom() {
           />
           
           {/* Central floating orb */}
-          <FloatingOrb
-            position={[0, 0, -5]}
-            color={mood.color}
-            size={2}
-            speed={isEndingSoon ? 1.5 : 0.8}
-            intensity={isEndingSoon ? 2 : 1.2}
-          />
+          {/* Removed FloatingOrb to prevent clipping */}
           
-          {/* Orbiting smaller orbs representing presence */}
-          {current.presentUsers.slice(0, 5).map((_, i) => {
-            const angle = (i / 5) * Math.PI * 2;
-            const radius = 4;
-            return (
-              <FloatingOrb
-                key={i}
-                position={[
-                  Math.cos(angle) * radius,
-                  Math.sin(angle) * 2,
-                  Math.sin(angle) * radius - 5,
-                ]}
-                color={mood.color}
-                size={0.4}
-                speed={0.6 + i * 0.1}
-                intensity={0.8}
-              />
-            );
-          })}
+          {/* Orbiting smaller orbs removed to prevent clipping */}
         </Scene>
       </div>
       
