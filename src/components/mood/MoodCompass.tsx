@@ -56,7 +56,13 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
     <div className="relative min-h-screen overflow-hidden">
       {/* 3D Background Scene */}
       <div className="absolute inset-0 z-0">
-        <Scene cameraPosition={[0, 0, 12]} fog={true} fogNear={8} fogFar={25}>
+        <Scene 
+          cameraPosition={[0, 0, 12]} 
+          fog={true} 
+          fogNear={8} 
+          fogFar={25}
+          orbitControls={false}
+        >
           {/* Ambient particle field */}
           <ParticleField
             count={1000}
@@ -73,14 +79,20 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
             const isSelected = selectedMood === moodId;
             
             return (
-              <FloatingOrb
+              <group
                 key={moodId}
-                position={position}
-                color={mood.color}
-                size={isSelected ? 1.2 : isHovered ? 1.0 : 0.7}
-                speed={isSelected ? 1.5 : 1}
-                intensity={isSelected ? 2 : isHovered ? 1.5 : 1}
-              />
+                onClick={() => handleMoodClick(moodId as MoodType)}
+                onPointerEnter={() => setHoveredMood(moodId as MoodType)}
+                onPointerLeave={() => setHoveredMood(null)}
+              >
+                <FloatingOrb
+                  position={position}
+                  color={mood.color}
+                  size={isSelected ? 1.2 : isHovered ? 1.0 : 0.7}
+                  speed={isSelected ? 1.5 : 1}
+                  intensity={isSelected ? 2 : isHovered ? 1.5 : 1}
+                />
+              </group>
             );
           })}
         </Scene>
