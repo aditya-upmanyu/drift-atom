@@ -1,8 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
-import { Scene, SpatialNode, ParticleField, ConnectionLine } from '../components/3d';
+import { Scene, ParticleField } from '../components/3d';
 import { CurrentPreview } from '../components/current/CurrentPreview';
 import { MOCK_CURRENTS } from '../data/currents';
 import { MOODS } from '../lib/constants';
@@ -13,7 +13,6 @@ import type { Current } from '../types';
 export function Home() {
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
-  const [hoveredCurrentId, setHoveredCurrentId] = useState<string | null>(null);
   const [selectedCurrent, setSelectedCurrent] = useState<Current | null>(null);
   
   // Handle ESC key to close preview
@@ -27,55 +26,6 @@ export function Home() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [selectedCurrent]);
-  
-  // Generate 3D positions for nodes in spatial constellation
-  const nodesWithPositions = useMemo(() => {
-    return MOCK_CURRENTS.map((current, index) => {
-      const angle = (index / MOCK_CURRENTS.length) * Math.PI * 2;
-      const radius = 5 + Math.random() * 1.5; // Tighter radius
-      const height = (Math.random() - 0.5) * 2; // More centered vertically
-      
-      return {
-        current,
-        position: [
-          Math.cos(angle) * radius,
-          height,
-          Math.sin(angle) * radius,
-        ] as [number, number, number],
-      };
-    });
-  }, []);
-  
-  // Find connections between Currents (same mood or high activity)
-  const connections = useMemo(() => {
-    const conns: Array<{
-      start: [number, number, number];
-      end: [number, number, number];
-      color: string;
-    }> = [];
-    
-    for (let i = 0; i < nodesWithPositions.length; i++) {
-      for (let j = i + 1; j < nodesWithPositions.length; j++) {
-        const nodeA = nodesWithPositions[i];
-        const nodeB = nodesWithPositions[j];
-        
-        // Connect if same mood and both are active/lively
-        if (
-          nodeA.current.mood === nodeB.current.mood &&
-          (nodeA.current.activityLevel === 'active' || nodeA.current.activityLevel === 'lively') &&
-          (nodeB.current.activityLevel === 'active' || nodeB.current.activityLevel === 'lively')
-        ) {
-          conns.push({
-            start: nodeA.position,
-            end: nodeB.position,
-            color: '#8B5CF6',
-          });
-        }
-      }
-    }
-    
-    return conns;
-  }, [nodesWithPositions]);
   
   const handleNodeClick = (current: Current) => {
     console.log('=== NAVIGATION DEBUG ===');
@@ -94,16 +44,16 @@ export function Home() {
   
   return (
     <div className="relative h-screen w-full overflow-hidden">
-      {/* 3D Scene */}
+      {/* 3D Scene - Disabled to prevent clipping issues */}
       <div className="absolute inset-0">
         <Scene 
           cameraPosition={[0, 0, 15]} 
           fog={true} 
           fogNear={20} 
           fogFar={50}
-          orbitControls={true}
+          orbitControls={false}
         >
-          {/* Ambient particles */}
+          {/* Only ambient particles */}
           <ParticleField
             count={1500}
             radius={20}
@@ -111,27 +61,6 @@ export function Home() {
             size={0.02}
             speed={0.15}
           />
-          
-          {/* Connection lines between related Currents */}
-          {connections.map((conn, i) => (
-            <ConnectionLine
-              key={i}
-              start={conn.start}
-              end={conn.end}
-              color={conn.color}
-            />
-          ))}
-          
-          {/* Current nodes */}
-          {nodesWithPositions.map(({ current, position }) => (
-            <SpatialNode
-              key={current.id}
-              current={current}
-              position={position}
-              onClick={() => handleNodeClick(current)}
-              onHover={(hovered) => setHoveredCurrentId(hovered ? current.id : null)}
-            />
-          ))}
         </Scene>
       </div>
       
@@ -306,15 +235,12 @@ export function Home() {
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
               className="inline-block px-6 py-3 glass-strong rounded-2xl border-2 border-white/20 mb-4"
             >
-              <p className="text-white/50 text-sm font-mono mb-1">
-                🖱️ Drag to rotate • Scroll to zoom
-              </p>
               <p className="text-white font-bold text-lg">
-                Click a node to enter
+                Click a card below to enter
               </p>
             </motion.div>
             
-            {/* Quick Access Grid - 2D Fallback */}
+            {/* Quick Access Grid - 2D Cards */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
               {MOCK_CURRENTS.slice(0, 4).map((current, idx) => (
                 <motion.button
@@ -334,25 +260,6 @@ export function Home() {
           </motion.div>
         </div>
       </div>
-      
-      {/* Hovered Current Info */}
-      {hoveredCurrentId && !selectedCurrent && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20 pointer-events-none"
-        >
-          <div className="glass-strong rounded-2xl px-6 py-4 min-w-[300px] text-center">
-            <div className="text-white/40 text-xs uppercase tracking-wider mb-1">
-              Click to enter
-            </div>
-            <div className="text-white font-medium">
-              Explore this moment
-            </div>
-          </div>
-        </motion.div>
-      )}
       
       {/* Current Preview Modal */}
       <CurrentPreview
