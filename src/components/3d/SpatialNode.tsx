@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useFrame } from '@react-three/fiber';
-import { Sphere, Html } from '@react-three/drei';
+import { Html } from '@react-three/drei';
 import * as THREE from 'three';
 import type { Current } from '../../types';
 import { MOODS } from '../../lib/constants';
@@ -69,19 +69,21 @@ export function SpatialNode({ current, position, onClick, onHover }: SpatialNode
   
   const handleClick = (e: any) => {
     e.stopPropagation();
+    console.log('Node clicked:', current.title); // Debug log
     onClick?.();
   };
   
   return (
     <group position={position}>
-      {/* Main node sphere */}
-      <Sphere
+      {/* Main node sphere - Highly interactive */}
+      <mesh
         ref={meshRef}
-        args={[1, 32, 32]}
+        position={[0, 0, 0]}
         onClick={handleClick}
         onPointerOver={handlePointerOver}
         onPointerOut={handlePointerOut}
       >
+        <sphereGeometry args={[1, 32, 32]} />
         <meshPhysicalMaterial
           color={color}
           emissive={color}
@@ -93,17 +95,18 @@ export function SpatialNode({ current, position, onClick, onHover }: SpatialNode
           clearcoat={1}
           clearcoatRoughness={0.1}
         />
-      </Sphere>
+      </mesh>
       
       {/* Glow ring */}
-      <Sphere args={[1.15, 32, 32]}>
+      <mesh>
+        <sphereGeometry args={[1.15, 32, 32]} />
         <meshBasicMaterial
           color={color}
           transparent
           opacity={hovered ? 0.3 : 0.15}
           side={THREE.BackSide}
         />
-      </Sphere>
+      </mesh>
       
       {/* Point light */}
       <pointLight

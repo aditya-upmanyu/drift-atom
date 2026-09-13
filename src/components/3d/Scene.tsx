@@ -65,6 +65,12 @@ export function Scene({
           enableDamping
           dampingFactor={0.05}
           makeDefault
+          enableRotate={true}
+          mouseButtons={{
+            LEFT: THREE.MOUSE.ROTATE,
+            MIDDLE: THREE.MOUSE.DOLLY,
+            RIGHT: THREE.MOUSE.PAN
+          }}
         />
       )}
       
