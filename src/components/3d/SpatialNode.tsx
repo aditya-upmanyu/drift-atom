@@ -98,9 +98,11 @@ export function SpatialNode({ current, position, onClick, onHover }: SpatialNode
           metalness={0.9}
           roughness={0.1}
           transparent
-          opacity={0.8}
+          opacity={0.9}
           clearcoat={1}
           clearcoatRoughness={0.1}
+          depthWrite={true}
+          depthTest={true}
         />
       </mesh>
       

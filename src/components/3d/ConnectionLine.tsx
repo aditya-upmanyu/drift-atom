@@ -16,9 +16,13 @@ export function ConnectionLine({
     <Line
       points={[start, end]}
       color={color}
-      lineWidth={1}
+      lineWidth={0.5}
       transparent
-      opacity={0.4}
+      opacity={0.2}
+      dashed
+      dashScale={2}
+      dashSize={0.5}
+      gapSize={0.5}
     />
   );
 }

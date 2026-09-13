@@ -8,14 +8,37 @@ import { useStore } from '../store/useStore';
 import { generateId } from '../lib/utils';
 
 export function Onboarding() {
-  const [step, setStep] = useState<'mood' | 'setup'>('mood');
+  const [step] = useState<'mood' | 'setup'>('mood');
   const [selectedMood, setSelectedMood] = useState<MoodType | null>(null);
   const navigate = useNavigate();
   const setUser = useStore((state) => state.setUser);
   
   const handleMoodSelect = (mood: MoodType) => {
     setSelectedMood(mood);
-    setStep('setup');
+    const existingUser = useStore.getState().user;
+    if (!existingUser) {
+      const defaultAvatars: Record<MoodType, string> = {
+        CALM: '🌊',
+        CURIOUS: '🔮',
+        NOSTALGIC: '🍂',
+        CREATIVE: '🎨',
+        MOTIVATED: '🔥',
+        REFLECTIVE: '🌌',
+      };
+      const newUser = {
+        id: generateId(),
+        displayName: 'Drifter',
+        avatar: defaultAvatars[mood] || '✨',
+        currentMood: mood,
+        bio: 'Collecting moments, not metrics',
+        joinedAt: new Date().toISOString(),
+      };
+      setUser(newUser);
+    } else {
+      useStore.getState().updateUserMood(mood);
+    }
+    useStore.getState().completeOnboarding();
+    navigate(`/conversation/${mood.toLowerCase()}`);
   };
   
   const handleSetupComplete = (name: string, avatar: string) => {

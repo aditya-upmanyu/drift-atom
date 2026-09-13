@@ -1,10 +1,11 @@
 import { motion } from 'framer-motion';
-import { Home, User, Sparkles, Settings } from 'lucide-react';
+import { Home, User, Sparkles, Settings, MessageCircle } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import { cn } from '../../lib/utils';
 
 const navItems = [
   { path: '/home', icon: Home, label: 'Field', gradient: 'from-violet-500 to-purple-500' },
+  { path: '/conversation', icon: MessageCircle, label: 'Chat', gradient: 'from-cyan-500 to-blue-500' },
   { path: '/memory', icon: Sparkles, label: 'Memories', gradient: 'from-purple-500 to-pink-500' },
   { path: '/profile', icon: User, label: 'Constellation', gradient: 'from-pink-500 to-rose-500' },
   { path: '/settings', icon: Settings, label: 'Settings', gradient: 'from-blue-500 to-cyan-500' },

@@ -84,8 +84,8 @@ export function MemoryTrail() {
                 <h2 className="text-2xl font-bold mb-6">{timeLabel}</h2>
                 <div className="space-y-6">
                   {mems.map((memory, index) => {
-                    const mood = MOODS[memory.mood];
-                    const gradient = getMoodGradient(memory.mood);
+                    const mood = MOODS[memory.mood?.toUpperCase()] || MOODS.CALM;
+                    const gradient = getMoodGradient(memory.mood?.toUpperCase() || 'CALM');
                     const isAnchored = memory.isAnchored;
                     
                     return (

@@ -6,6 +6,8 @@ import { Navigation } from './components/navigation/Navigation';
 import { Landing } from './pages/Landing';
 import { Onboarding } from './pages/Onboarding';
 import { Home } from './pages/Home';
+import { MoodField } from './pages/MoodField';
+import { MoodConversation } from './pages/MoodConversation';
 import { CurrentRoom } from './pages/CurrentRoom';
 import { MemoryTrail } from './pages/MemoryTrail';
 import { Profile } from './pages/Profile';
@@ -20,6 +22,7 @@ function AppContent() {
   const showNavigation = onboardingComplete && 
     !location.pathname.includes('/onboarding') && 
     !location.pathname.includes('/current/') &&
+    !location.pathname.includes('/conversation') &&
     location.pathname !== '/';
   
   return (
@@ -45,6 +48,21 @@ function AppContent() {
               )
             }
           />
+          
+          <Route
+            path="/mood/:mood"
+            element={
+              onboardingComplete ? (
+                <MoodField />
+              ) : (
+                <Navigate to="/onboarding" replace />
+              )
+            }
+          />
+          
+          {/* Dedicated conversation room by mood */}
+          <Route path="/conversation/:mood" element={<MoodConversation />} />
+          <Route path="/conversation" element={<MoodConversation />} />
           
           <Route
             path="/current/:id"

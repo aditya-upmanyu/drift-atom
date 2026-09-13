@@ -58,11 +58,11 @@ export function Scene({
       {(enableControls || orbitControls) && (
         <OrbitControls
           enableZoom={true}
-          enablePan={true}
-          maxPolarAngle={Math.PI / 1.5}
-          minPolarAngle={Math.PI / 3}
-          maxDistance={30}
-          minDistance={10}
+          enablePan={false}
+          maxPolarAngle={Math.PI / 1.2}
+          minPolarAngle={Math.PI / 4}
+          maxDistance={25}
+          minDistance={8}
           enableDamping
           dampingFactor={0.05}
           makeDefault

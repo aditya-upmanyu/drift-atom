@@ -1,9 +1,11 @@
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Plus } from 'lucide-react';
 import { Scene, SpatialNode, ParticleField, ConnectionLine } from '../components/3d';
+import { CurrentPreview } from '../components/current/CurrentPreview';
 import { MOCK_CURRENTS } from '../data/currents';
+import { MOODS } from '../lib/constants';
 import { useStore } from '../store/useStore';
 import { Button } from '../components/common/Button';
 import type { Current } from '../types';
@@ -12,13 +14,26 @@ export function Home() {
   const navigate = useNavigate();
   const user = useStore((state) => state.user);
   const [hoveredCurrentId, setHoveredCurrentId] = useState<string | null>(null);
+  const [selectedCurrent, setSelectedCurrent] = useState<Current | null>(null);
+  
+  // Handle ESC key to close preview
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedCurrent) {
+        setSelectedCurrent(null);
+      }
+    };
+    
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedCurrent]);
   
   // Generate 3D positions for nodes in spatial constellation
   const nodesWithPositions = useMemo(() => {
     return MOCK_CURRENTS.map((current, index) => {
       const angle = (index / MOCK_CURRENTS.length) * Math.PI * 2;
-      const radius = 6 + Math.random() * 2; // Increased from 5
-      const height = (Math.random() - 0.5) * 3; // Reduced from 4
+      const radius = 5 + Math.random() * 1.5; // Tighter radius
+      const height = (Math.random() - 0.5) * 2; // More centered vertically
       
       return {
         current,
@@ -66,10 +81,15 @@ export function Home() {
     console.log('=== NAVIGATION DEBUG ===');
     console.log('Current clicked:', current.title);
     console.log('Current ID:', current.id);
-    console.log('Navigating to:', `/current/${current.id}`);
-    console.log('Onboarding complete:', useStore.getState().onboardingComplete);
+    console.log('Opening preview modal');
     console.log('========================');
-    navigate(`/current/${current.id}`);
+    setSelectedCurrent(current);
+  };
+  
+  const handleEnterCurrent = () => {
+    if (selectedCurrent) {
+      navigate(`/current/${selectedCurrent.id}`);
+    }
   };
   
   return (
@@ -77,10 +97,10 @@ export function Home() {
       {/* 3D Scene */}
       <div className="absolute inset-0">
         <Scene 
-          cameraPosition={[0, 0, 20]} 
+          cameraPosition={[0, 0, 15]} 
           fog={true} 
-          fogNear={15} 
-          fogFar={40}
+          fogNear={20} 
+          fogFar={50}
           orbitControls={true}
         >
           {/* Ambient particles */}
@@ -159,11 +179,11 @@ export function Home() {
                 <Button
                   variant="gradient"
                   size="md"
-                  onClick={() => navigate('/create')}
+                  onClick={() => navigate(`/conversation/${(user?.currentMood || 'calm').toLowerCase()}`)}
                   className="shadow-2xl"
                 >
                   <Plus className="w-5 h-5" />
-                  <span>Create Current</span>
+                  <span>Start Conversation</span>
                 </Button>
               </motion.div>
             </div>
@@ -177,7 +197,7 @@ export function Home() {
           transition={{ delay: 0.3 }}
           className="px-6 md:px-8"
         >
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto space-y-4">
             <div className="glass-strong rounded-3xl px-8 py-5 inline-flex items-center gap-10 border-2 border-white/10 shadow-2xl backdrop-blur-2xl">
               <motion.div 
                 className="text-center"
@@ -222,6 +242,54 @@ export function Home() {
                 </div>
               </motion.div>
             </div>
+            
+            {/* Mood Filters */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+              className="flex flex-wrap gap-2"
+            >
+              <div className="text-white/40 text-xs uppercase tracking-wider font-bold flex items-center mr-2">
+                Filter by mood:
+              </div>
+              {Object.entries(MOODS).map(([moodId, mood], idx) => (
+                <motion.button
+                  key={moodId}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.5 + idx * 0.05 }}
+                  onClick={() => navigate(`/mood/${moodId.toLowerCase()}`)}
+                  whileHover={{ scale: 1.05, y: -2 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="glass rounded-full px-4 py-2 text-sm font-medium border border-white/10 hover:border-white/30 transition-all flex items-center gap-2 hover:shadow-lg"
+                  style={{
+                    boxShadow: `0 0 0 0 ${mood.color}40`,
+                    transition: 'all 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.boxShadow = `0 0 20px ${mood.color}60`;
+                    e.currentTarget.style.borderColor = `${mood.color}50`;
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.boxShadow = `0 0 0 0 ${mood.color}40`;
+                    e.currentTarget.style.borderColor = 'rgba(255,255,255,0.1)';
+                  }}
+                >
+                  <span className="text-lg">{mood.icon}</span>
+                  <span className="text-white">{mood.label}</span>
+                  <span 
+                    className="text-xs px-2 py-0.5 rounded-full"
+                    style={{
+                      backgroundColor: `${mood.color}20`,
+                      color: mood.color,
+                    }}
+                  >
+                    {MOCK_CURRENTS.filter(c => c.mood === moodId).length}
+                  </span>
+                </motion.button>
+              ))}
+            </motion.div>
           </div>
         </motion.div>
         
@@ -268,7 +336,7 @@ export function Home() {
       </div>
       
       {/* Hovered Current Info */}
-      {hoveredCurrentId && (
+      {hoveredCurrentId && !selectedCurrent && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -285,6 +353,13 @@ export function Home() {
           </div>
         </motion.div>
       )}
+      
+      {/* Current Preview Modal */}
+      <CurrentPreview
+        current={selectedCurrent}
+        onClose={() => setSelectedCurrent(null)}
+        onEnter={handleEnterCurrent}
+      />
     </div>
   );
 }

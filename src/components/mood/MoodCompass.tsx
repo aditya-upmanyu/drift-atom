@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import type { MoodType } from '../../types';
 import { MOODS } from '../../lib/constants';
-import { Button } from '../common/Button';
 import { Scene, FloatingOrb, ParticleField } from '../3d';
 import { detectMood, type MoodScore } from '../../utils/moodDetection';
 
@@ -10,12 +10,24 @@ interface MoodCompassProps {
   onSelectMood: (mood: MoodType) => void;
 }
 
-// 3D positions for mood orbs arranged in a circle
+// Exactly the 3 requested moods
+export const AVAILABLE_MOODS: MoodType[] = ['CALM', 'CURIOUS', 'NOSTALGIC'];
+
+export const MOOD_ICONS: Record<MoodType, string> = {
+  CALM: '🌊',
+  CURIOUS: '🔮',
+  NOSTALGIC: '🍂',
+  CREATIVE: '🎨',
+  MOTIVATED: '🔥',
+  REFLECTIVE: '🌌',
+};
+
+// 3D positions for the 3 mood orbs in space
 const moodPositions: Record<MoodType, [number, number, number]> = {
-  CALM: [-3, 2, 0],
-  CURIOUS: [3, 2, 0],
+  CALM: [-4, 0.5, 0],
+  CURIOUS: [0, 1.8, -1.5],
+  NOSTALGIC: [4, 0.5, 0],
   CREATIVE: [0, 3, -2],
-  NOSTALGIC: [-3, -1, 1],
   MOTIVATED: [3, -1, 1],
   REFLECTIVE: [0, -2, -1],
 };
@@ -30,11 +42,14 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
   const activeMood = hoveredMood || selectedMood;
   const activeMoodData = activeMood ? MOODS[activeMood] : null;
   
-  // AI-powered mood detection
+  // AI-powered mood detection filtered to available moods
   useEffect(() => {
     if (userInput.trim().length > 3) {
       const detected = detectMood(userInput);
-      setSuggestions(detected);
+      const filtered = detected.filter((s) =>
+        AVAILABLE_MOODS.includes(s.mood.toUpperCase() as MoodType)
+      );
+      setSuggestions(filtered.length > 0 ? filtered : detected.slice(0, 2));
       setShowSuggestions(true);
     } else {
       setSuggestions([]);
@@ -72,23 +87,24 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
             speed={0.2}
           />
           
-          {/* Mood orbs in 3D space */}
-          {Object.entries(MOODS).map(([moodId, mood]) => {
-            const position = moodPositions[moodId as MoodType];
+          {/* Mood orbs in 3D space for the 3 available moods */}
+          {AVAILABLE_MOODS.map((moodId) => {
+            const mood = MOODS[moodId];
+            const position = moodPositions[moodId];
             const isHovered = hoveredMood === moodId;
             const isSelected = selectedMood === moodId;
             
             return (
               <group
                 key={moodId}
-                onClick={() => handleMoodClick(moodId as MoodType)}
-                onPointerEnter={() => setHoveredMood(moodId as MoodType)}
+                onClick={() => handleMoodClick(moodId)}
+                onPointerEnter={() => setHoveredMood(moodId)}
                 onPointerLeave={() => setHoveredMood(null)}
               >
                 <FloatingOrb
                   position={position}
                   color={mood.color}
-                  size={isSelected ? 1.2 : isHovered ? 1.0 : 0.7}
+                  size={isSelected ? 1.3 : isHovered ? 1.05 : 0.75}
                   speed={isSelected ? 1.5 : 1}
                   intensity={isSelected ? 2 : isHovered ? 1.5 : 1}
                 />
@@ -227,7 +243,8 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
             transition={{ duration: 0.8, delay: 0.4 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"
           >
-            {Object.entries(MOODS).map(([moodId, mood], index) => {
+            {AVAILABLE_MOODS.map((moodId, index) => {
+              const mood = MOODS[moodId];
               const isSelected = selectedMood === moodId;
               const isHovered = hoveredMood === moodId;
               
@@ -303,7 +320,7 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
                   
                   {/* Content */}
                   <div className="relative z-10">
-                    {/* Icon/Color indicator */}
+                    {/* Icon/Color indicator with mood-specific animations */}
                     <motion.div
                       className="relative mb-6"
                       animate={{
@@ -311,6 +328,148 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
                       }}
                       transition={{ type: "spring", stiffness: 300, damping: 20 }}
                     >
+                      {/* CALM - Breathing glow */}
+                      {moodId === 'CALM' && (
+                        <motion.div
+                          className="absolute -inset-2 rounded-3xl"
+                          style={{
+                            background: `radial-gradient(circle, ${mood.color}40, transparent 70%)`,
+                          }}
+                          animate={{
+                            scale: [1, 1.15, 1],
+                            opacity: [0.4, 0.7, 0.4],
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        />
+                      )}
+                      
+                      {/* CURIOUS - Orbiting particles */}
+                      {moodId === 'CURIOUS' && (isHovered || isSelected) && (
+                        <>
+                          {[...Array(4)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className="absolute w-1.5 h-1.5 rounded-full"
+                              style={{ backgroundColor: mood.color }}
+                              animate={{
+                                x: [
+                                  Math.cos((i / 4) * Math.PI * 2) * 40,
+                                  Math.cos((i / 4) * Math.PI * 2 + Math.PI) * 40,
+                                  Math.cos((i / 4) * Math.PI * 2) * 40,
+                                ],
+                                y: [
+                                  Math.sin((i / 4) * Math.PI * 2) * 40,
+                                  Math.sin((i / 4) * Math.PI * 2 + Math.PI) * 40,
+                                  Math.sin((i / 4) * Math.PI * 2) * 40,
+                                ],
+                              }}
+                              transition={{
+                                duration: 3,
+                                repeat: Infinity,
+                                ease: "linear",
+                                delay: i * 0.25,
+                              }}
+                            />
+                          ))}
+                        </>
+                      )}
+                      
+                      {/* CREATIVE - Flowing energy */}
+                      {moodId === 'CREATIVE' && (
+                        <motion.div
+                          className="absolute -inset-3 rounded-3xl opacity-50"
+                          style={{
+                            background: `linear-gradient(90deg, ${mood.color}00, ${mood.color}80, ${mood.color}00)`,
+                          }}
+                          animate={{
+                            rotate: [0, 360],
+                          }}
+                          transition={{
+                            duration: 8,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }}
+                        />
+                      )}
+                      
+                      {/* NOSTALGIC - Fading particles */}
+                      {moodId === 'NOSTALGIC' && (isHovered || isSelected) && (
+                        <>
+                          {[...Array(5)].map((_, i) => (
+                            <motion.div
+                              key={i}
+                              className="absolute w-2 h-2 rounded-full"
+                              style={{ 
+                                backgroundColor: mood.color,
+                                left: '50%',
+                                top: '50%'
+                              }}
+                              animate={{
+                                x: [0, (Math.random() - 0.5) * 60],
+                                y: [0, (Math.random() - 0.5) * 60],
+                                opacity: [1, 0],
+                                scale: [1, 0],
+                              }}
+                              transition={{
+                                duration: 2,
+                                repeat: Infinity,
+                                delay: i * 0.4,
+                                ease: "easeOut"
+                              }}
+                            />
+                          ))}
+                        </>
+                      )}
+                      
+                      {/* MOTIVATED - Energetic pulse */}
+                      {moodId === 'MOTIVATED' && (
+                        <motion.div
+                          className="absolute -inset-1 rounded-2xl"
+                          style={{
+                            backgroundColor: mood.color,
+                          }}
+                          animate={{
+                            scale: [1, 1.3, 1],
+                            opacity: [0, 0.6, 0],
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeOut"
+                          }}
+                        />
+                      )}
+                      
+                      {/* REFLECTIVE - Slow rotating ring */}
+                      {moodId === 'REFLECTIVE' && (
+                        <motion.div
+                          className="absolute -inset-4 rounded-full border-2 opacity-50"
+                          style={{
+                            borderColor: mood.color,
+                          }}
+                          animate={{
+                            rotate: [0, 360],
+                            scale: [1, 1.1, 1],
+                          }}
+                          transition={{
+                            rotate: {
+                              duration: 6,
+                              repeat: Infinity,
+                              ease: "linear"
+                            },
+                            scale: {
+                              duration: 3,
+                              repeat: Infinity,
+                              ease: "easeInOut"
+                            }
+                          }}
+                        />
+                      )}
+                      
                       <motion.div
                         className="w-20 h-20 rounded-2xl relative overflow-hidden"
                         style={{
@@ -344,40 +503,9 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
                         
                         {/* Icon */}
                         <div className="absolute inset-0 flex items-center justify-center text-4xl">
-                          {mood.icon}
+                          {MOOD_ICONS[moodId] || mood.icon}
                         </div>
                       </motion.div>
-                      
-                      {/* Floating particles effect */}
-                      {isHovered && (
-                        <>
-                          {[...Array(3)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              className="absolute w-2 h-2 rounded-full"
-                              style={{ backgroundColor: mood.color }}
-                              initial={{ 
-                                x: 10, 
-                                y: 10, 
-                                opacity: 0,
-                                scale: 0
-                              }}
-                              animate={{ 
-                                x: Math.cos((i / 3) * Math.PI * 2) * 40,
-                                y: Math.sin((i / 3) * Math.PI * 2) * 40,
-                                opacity: [0, 1, 0],
-                                scale: [0, 1, 0]
-                              }}
-                              transition={{ 
-                                duration: 1.5,
-                                repeat: Infinity,
-                                delay: i * 0.2,
-                                ease: "easeOut"
-                              }}
-                            />
-                          ))}
-                        </>
-                      )}
                     </motion.div>
                     
                     {/* Text content */}
@@ -437,33 +565,110 @@ export function MoodCompass({ onSelectMood }: MoodCompassProps) {
             })}
           </motion.div>
           
-          {/* Continue Button */}
-          <AnimatePresence>
-            {selectedMood && (
-              <motion.div
-                initial={{ opacity: 0, y: 20, scale: 0.9 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.9 }}
-                transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                className="text-center"
-              >
-                <Button
-                  variant="gradient"
-                  size="xl"
-                  onClick={handleContinue}
-                  className="px-16 min-w-[280px] shadow-2xl"
+          {/* Action Area: Selected Mood & Enter the Conversation */}
+          <div className="max-w-md mx-auto text-center min-h-[140px] flex flex-col items-center justify-center">
+            <AnimatePresence mode="wait">
+              {selectedMood ? (
+                <motion.div
+                  key={selectedMood}
+                  initial={{ opacity: 0, y: 15, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: -15, scale: 0.95 }}
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                  className="flex flex-col items-center justify-center space-y-3 w-full"
                 >
-                  <span>Continue to Drift</span>
-                  <motion.span
-                    animate={{ x: [0, 5, 0] }}
-                    transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  {/* Selected Mood Name clearly displayed near/above the button */}
+                  <motion.div
+                    initial={{ opacity: 0, y: 5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="flex items-center gap-2.5 px-6 py-2 rounded-full glass-strong border border-white/20 shadow-xl"
                   >
-                    →
-                  </motion.span>
-                </Button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                    <span className="text-2xl">{MOOD_ICONS[selectedMood]}</span>
+                    <span
+                      className="text-2xl md:text-3xl font-extrabold tracking-wide text-white"
+                    >
+                      {MOODS[selectedMood]?.label}
+                    </span>
+                    <span 
+                      className="text-[10px] uppercase tracking-widest font-bold px-2.5 py-0.5 rounded-full"
+                      style={{ 
+                        backgroundColor: `${MOODS[selectedMood]?.color}30`,
+                        color: MOODS[selectedMood]?.color,
+                      }}
+                    >
+                      Selected
+                    </span>
+                  </motion.div>
+
+                  {/* Enter the Conversation Button */}
+                  <motion.button
+                    onClick={handleContinue}
+                    whileHover={{ scale: 1.04, y: -2 }}
+                    whileTap={{ scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                    className="group relative px-10 py-5 rounded-2xl font-extrabold text-lg md:text-xl text-white overflow-hidden shadow-2xl min-w-[300px] md:min-w-[340px] cursor-pointer"
+                    style={{
+                      boxShadow: `0 0 45px ${MOODS[selectedMood]?.color}60, 0 10px 30px rgba(0,0,0,0.5)`,
+                    }}
+                  >
+                    {/* Gradient background */}
+                    <div
+                      className="absolute inset-0 transition-all duration-300"
+                      style={{
+                        background: `linear-gradient(135deg, ${MOODS[selectedMood]?.color}, ${MOODS[selectedMood]?.color}dd)`,
+                      }}
+                    />
+
+                    {/* Shimmer sweep */}
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                      animate={{
+                        x: ['-100%', '100%'],
+                      }}
+                      transition={{
+                        duration: 2.2,
+                        repeat: Infinity,
+                        repeatDelay: 0.8,
+                        ease: 'easeInOut',
+                      }}
+                    />
+
+                    {/* Border highlight */}
+                    <div className="absolute inset-0 rounded-2xl border-2 border-white/30 group-hover:border-white/60 transition-colors" />
+
+                    {/* Text and icons */}
+                    <span className="relative z-10 flex items-center justify-center gap-3 tracking-wide">
+                      <Sparkles className="w-5 h-5 text-white/90" />
+                      <span>Enter the Conversation</span>
+                      <motion.span
+                        animate={{ x: [0, 5, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+                      >
+                        <ArrowRight className="w-5 h-5" />
+                      </motion.span>
+                    </span>
+                  </motion.button>
+
+                  <p className="text-xs text-white/50 tracking-wider">
+                    Opens the live {MOODS[selectedMood]?.label.toLowerCase()} conversation space
+                  </p>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="unselected"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="py-3"
+                >
+                  <div className="inline-flex items-center gap-2 px-5 py-3 rounded-full glass border border-white/10 text-white/60 text-sm shadow-md">
+                    <Sparkles className="w-4 h-4 text-violet-300 animate-pulse" />
+                    <span>Select <strong>Calm</strong>, <strong>Curious</strong>, or <strong>Nostalgic</strong> above to enter</span>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
     </div>

@@ -493,3 +493,48 @@
     outline-offset: 2px;
   }
 }
+
+/* Stars background effect */
+.stars-background {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.stars-background::before,
+.stars-background::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  height: 2px;
+  background: white;
+  box-shadow: 
+    100px 200px white, 300px 400px white, 500px 100px white, 
+    700px 500px white, 900px 300px white, 200px 600px white,
+    400px 800px white, 600px 200px white, 800px 700px white,
+    150px 350px rgba(255, 255, 255, 0.5), 350px 150px rgba(255, 255, 255, 0.5),
+    550px 450px rgba(255, 255, 255, 0.5), 750px 250px rgba(255, 255, 255, 0.5),
+    250px 500px rgba(255, 255, 255, 0.3), 450px 650px rgba(255, 255, 255, 0.3),
+    650px 350px rgba(255, 255, 255, 0.3), 850px 550px rgba(255, 255, 255, 0.3),
+    950px 150px rgba(255, 255, 255, 0.4), 1050px 450px rgba(255, 255, 255, 0.4),
+    1150px 250px rgba(255, 255, 255, 0.3), 1250px 550px rgba(255, 255, 255, 0.3),
+    1350px 350px rgba(255, 255, 255, 0.4), 1450px 650px rgba(255, 255, 255, 0.4),
+    50px 750px rgba(255, 255, 255, 0.5), 180px 50px rgba(255, 255, 255, 0.4),
+    380px 550px rgba(255, 255, 255, 0.3), 580px 750px rgba(255, 255, 255, 0.4),
+    780px 150px rgba(255, 255, 255, 0.5), 980px 450px rgba(255, 255, 255, 0.3);
+  animation: twinkle 3s infinite;
+}
+
+.stars-background::after {
+  animation-delay: 1.5s;
+  opacity: 0.7;
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}

@@ -33,6 +33,7 @@ export interface Current {
   activityLevel: 'quiet' | 'moderate' | 'active' | 'lively';
   gradient?: string;
   isActive?: boolean;
+  messageCount?: number;
 }
 
 export interface Message {

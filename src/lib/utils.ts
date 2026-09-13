@@ -86,7 +86,7 @@ export function getMoodGradient(moodId: string): string {
     REFLECTIVE: 'from-indigo-600/20 via-purple-600/20 to-violet-600/20',
   };
   
-  return gradients[moodId] || gradients.CALM;
+  return gradients[moodId?.toUpperCase()] || gradients.CALM;
 }
 
 // Get background gradient for mood (stronger for backgrounds)
@@ -100,7 +100,7 @@ export function getMoodBackgroundGradient(moodId: string): string {
     REFLECTIVE: 'from-indigo-900/30 via-purple-900/30 to-violet-900/30',
   };
   
-  return gradients[moodId] || gradients.CALM;
+  return gradients[moodId?.toUpperCase()] || gradients.CALM;
 }
 
 // Shuffle array (Fisher-Yates algorithm)

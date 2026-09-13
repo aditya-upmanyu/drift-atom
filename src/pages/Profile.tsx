@@ -16,7 +16,7 @@ export function Profile() {
     return null;
   }
   
-  const currentMood = MOODS[user.currentMood];
+  const currentMood = MOODS[user.currentMood?.toUpperCase()] || MOODS.CALM;
   
   return (
     <div className="min-h-screen py-12 px-6">

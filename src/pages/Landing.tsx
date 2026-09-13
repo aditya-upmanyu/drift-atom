@@ -24,6 +24,18 @@ export function Landing() {
       <section className="relative h-screen w-full overflow-hidden">
         {/* 3D Background */}
         <div className="absolute inset-0 z-0">
+          {/* Deep cosmic backdrop with nebula effect */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#0a0118] via-[#0d0520] to-[#070B14]" />
+          
+          {/* Subtle stars */}
+          <div className="stars-background opacity-40" />
+          
+          {/* Ambient nebula glows */}
+          <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-violet-600/10 rounded-full blur-[120px] animate-pulse" style={{ animationDuration: '8s' }} />
+          <div className="absolute bottom-0 right-1/4 w-[700px] h-[700px] bg-purple-600/10 rounded-full blur-[140px] animate-pulse" style={{ animationDuration: '10s', animationDelay: '2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-pink-500/5 rounded-full blur-[100px] animate-pulse" style={{ animationDuration: '12s', animationDelay: '4s' }} />
+          
+          {/* 3D Scene */}
           <Scene cameraPosition={[0, 0, 15]} fog={true} fogNear={10} fogFar={40}>
             {/* Central Drift Core */}
             <DriftCore
@@ -34,13 +46,13 @@ export function Landing() {
               speed={0.8}
             />
             
-            {/* Particle Field */}
+            {/* Enhanced Particle Field with more particles */}
             <ParticleField
-              count={2000}
-              radius={15}
+              count={3000}
+              radius={18}
               color="#8B5CF6"
-              size={0.03}
-              speed={0.3}
+              size={0.025}
+              speed={0.2}
             />
             
             {/* Orbiting smaller orbs */}
@@ -48,6 +60,8 @@ export function Landing() {
             <FloatingOrb position={[-3, -1, 1]} color="#A855F7" size={0.3} speed={1.2} />
             <FloatingOrb position={[2, -2, -1]} color="#EC4899" size={0.35} speed={0.6} />
             <FloatingOrb position={[-2, 1.5, 2]} color="#06B6D4" size={0.3} speed={1.0} />
+            <FloatingOrb position={[4, -1, -2]} color="#8B5CF6" size={0.25} speed={0.9} />
+            <FloatingOrb position={[-4, 2, -1]} color="#C084FC" size={0.28} speed={0.7} />
           </Scene>
         </div>
         
@@ -88,26 +102,20 @@ export function Landing() {
               />
             </motion.h1>
             
-            {/* Main Tagline */}
+            {/* Elegant Tagline */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.8 }}
-              className="text-3xl md:text-4xl font-semibold text-white mb-3 tracking-wide"
+              className="text-2xl md:text-3xl font-light text-white/90 tracking-wide mb-16 max-w-2xl mx-auto"
+              style={{ 
+                lineHeight: 1.6,
+                fontVariantNumeric: 'proportional-nums',
+                letterSpacing: '0.02em'
+              }}
             >
-              Social, without the scroll.
+              Choose a feeling. Find a moment.<br />Let it drift.
             </motion.div>
-            
-            {/* Subtext */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.1 }}
-              className="text-xl md:text-2xl text-white/70 max-w-2xl mx-auto tracking-tight"
-              style={{ lineHeight: 1.4 }}
-            >
-              Find people in the same moment.
-            </motion.p>
           </motion.div>
           
           {/* CTA Buttons */}
@@ -307,12 +315,9 @@ export function Landing() {
               className="grid grid-cols-2 md:grid-cols-3 gap-6"
             >
               {[
-                { name: 'Calm', color: 'from-blue-500 to-cyan-500' },
-                { name: 'Curious', color: 'from-cyan-500 to-blue-600' },
-                { name: 'Creative', color: 'from-purple-500 to-pink-500' },
-                { name: 'Nostalgic', color: 'from-orange-500 to-amber-500' },
-                { name: 'Motivated', color: 'from-red-500 to-orange-500' },
-                { name: 'Reflective', color: 'from-indigo-500 to-purple-500' },
+                { name: 'Calm', icon: '🌊', color: 'from-blue-500 to-cyan-500', desc: 'Peaceful & centered' },
+                { name: 'Curious', icon: '🔮', color: 'from-cyan-500 to-blue-600', desc: 'Ready to explore' },
+                { name: 'Nostalgic', icon: '🍂', color: 'from-orange-500 to-amber-500', desc: 'Remembering warmly' },
               ].map((mood, index) => (
                 <motion.div
                   key={mood.name}
@@ -320,11 +325,19 @@ export function Landing() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.05, y: -8 }}
-                  className="glass rounded-3xl p-8 text-center group cursor-pointer"
+                  whileHover={{ scale: 1.06, y: -8 }}
+                  onClick={() => navigate(`/conversation/${mood.name.toLowerCase()}`)}
+                  className="glass-strong rounded-3xl p-8 text-center group cursor-pointer border border-white/10 hover:border-white/30 transition-all shadow-xl"
                 >
-                  <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${mood.color} shadow-lg group-hover:shadow-xl transition-shadow`} />
-                  <h3 className="text-xl font-bold">{mood.name}</h3>
+                  <div className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${mood.color} shadow-lg group-hover:shadow-xl transition-shadow flex items-center justify-center text-3xl`}>
+                    {mood.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold mb-1 text-white">{mood.name}</h3>
+                  <p className="text-sm text-white/60 mb-3">{mood.desc}</p>
+                  <span className="text-xs font-semibold text-violet-300 group-hover:text-white flex items-center justify-center gap-1">
+                    <span>Enter Conversation</span>
+                    <span>→</span>
+                  </span>
                 </motion.div>
               ))}
             </motion.div>
